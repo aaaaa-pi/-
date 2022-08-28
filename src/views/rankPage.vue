@@ -1,17 +1,17 @@
 <template>
   <div class="com-page">
-    <single-map></single-map>
+    <rank></rank>
   </div>
 </template>
 
 <script>
-import Map from "@/components/map.vue";
+import Rank from "@/components/rank.vue";
 export default {
   data() {
     return {};
   },
   methods: {},
-  components: { "single-map": Map },
+  components: { rank: Rank },
 };
 </script>
 
