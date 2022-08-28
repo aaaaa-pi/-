@@ -1,17 +1,17 @@
 <template>
   <div class="com-page">
-    <trend></trend>
+    <single-map></single-map>
   </div>
 </template>
 
 <script>
-import Trend from "@/components/trend.vue";
+import Map from "@/components/map.vue";
 export default {
   data() {
     return {};
   },
   methods: {},
-  components: { trend: Trend },
+  components: { "single-map": Map },
 };
 </script>
 

@@ -15,5 +15,5 @@ export default {
 };
 </script>
 
-<style lang="lass" scoped>
+<style lang="less" scoped>
 </style>

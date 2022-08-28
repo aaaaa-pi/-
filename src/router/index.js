@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import SellerPage from '@/views/sellerPage'
 import TrendPage from '@/views/trendPage'
+import MapPage from '@/views/mapPage'
 
 Vue.use(VueRouter)
 
@@ -13,7 +14,11 @@ const routes = [
   {
     path: '/trendpage',
     component: TrendPage
-  }
+  },
+  {
+    path: '/mappage',
+    component: MapPage
+  },
 ]
 
 const router = new VueRouter({
