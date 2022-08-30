@@ -5,6 +5,7 @@ import TrendPage from '@/views/trendPage'
 import MapPage from '@/views/mapPage'
 import RankPage from '@/views/rankPage'
 import HotPage from '@/views/hotPage'
+import StockPage from '@/views/stockPage'
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,10 @@ const routes = [
   {
     path: '/hotpage',
     component: HotPage
+  },
+  {
+    path: '/stockpage',
+    component: StockPage
   }
 ]
 
