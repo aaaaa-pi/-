@@ -16,9 +16,18 @@ export default {
       timerId: null,
     };
   },
+  created() {
+    this.$socket.registerCallBack("sellerData", this.getData);
+  },
   mounted() {
     this.initChart();
-    this.getData();
+    // this.getData();
+    this.$socket.send({
+      action: "getData",
+      socketType: "sellerData",
+      chartName: "seller",
+      value: "",
+    });
     window.addEventListener("resize", this.screenAdapter);
     // 在页面完成加载的时候，主动进行屏幕的适配
     this.screenAdapter();
@@ -26,6 +35,7 @@ export default {
   destroyed() {
     clearInterval(this.timerId);
     window.removeEventListener("resize", this.screenAdapter);
+    this.$socket.unregisterCallBack("sellerData");
   },
   methods: {
     // 初始化echartInstance对象
@@ -106,9 +116,9 @@ export default {
       });
     },
     // 获取服务器的数据
-    async getData() {
+    getData(ret) {
       // http://127.0.0.1:8888/api/seller
-      const { data: ret } = await this.$http.get("seller");
+      // const { data: ret } = await this.$http.get("seller");
       this.allData = ret;
       // 对数据进行排序
       this.allData.sort((a, b) => {

@@ -15,14 +15,24 @@ export default {
       timeId: null, // 定时器的标识
     };
   },
+  created() {
+    this.$socket.registerCallBack("rankData", this.getData);
+  },
   mounted() {
     this.initChart();
-    this.getData();
+    // this.getData();
+    this.$socket.send({
+      action: "getData",
+      socketType: "rankData",
+      chartName: "rank",
+      value: "",
+    });
     window.addEventListener("resize", this.screenAdapter);
     this.screenAdapter();
   },
   destroyed() {
     window.removeEventListener("resize", this.screenAdapter);
+    this.$socket.unregisterCallBack("rankData");
     clearInterval(this.timeId);
   },
   methods: {
@@ -58,8 +68,8 @@ export default {
       };
       this.chartInstance.setOption(initOption);
     },
-    async getData() {
-      const { data: ret } = await this.$http.get("rank");
+    getData(ret) {
+      // const { data: ret } = await this.$http.get("rank");
       this.allData = ret;
       this.allData.sort((a, b) => {
         return b.value - a.value;

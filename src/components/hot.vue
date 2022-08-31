@@ -16,6 +16,9 @@ export default {
       currentIndex: 0,
     };
   },
+  created() {
+    this.$socket.registerCallBack("hotData", this.getData);
+  },
   computed: {
     catName() {
       if (!this.allData) {
@@ -27,12 +30,19 @@ export default {
   },
   mounted() {
     this.initChart();
-    this.getData();
+    // this.getData();
+    this.$socket.send({
+      action: "getData",
+      socketType: "hotData",
+      chartName: "hotproduct",
+      value: "",
+    });
     window.addEventListener("resize", this.screenAdapter);
     this.screenAdapter();
   },
   destroyed() {
     window.removeEventListener("resize", this.screenAdapter);
+    this.$socket.unregisterCallBack("hotData");
   },
   methods: {
     initChart() {
@@ -83,8 +93,8 @@ export default {
       };
       this.chartInstance.setOption(initOption);
     },
-    async getData() {
-      const { data: ret } = await this.$http.get("hotproduct");
+    getData(ret) {
+      // const { data: ret } = await this.$http.get("hotproduct");
       this.allData = ret;
       this.updateChart();
     },

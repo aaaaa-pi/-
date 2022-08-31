@@ -14,14 +14,24 @@ export default {
       timeId: "",
     };
   },
+  created() {
+    this.$socket.registerCallBack("stockData", this.getData);
+  },
   mounted() {
     this.initChart();
-    this.getData();
+    // this.getData();
+    this.$socket.send({
+      action: "getData",
+      socketType: "stockData",
+      chartName: "stock",
+      value: "",
+    });
     window.addEventListener("resize", this.screenAdapter);
     this.screenAdapter();
   },
   destroyed() {
     window.removeEventListener("resize", this.screenAdapter);
+    this.$socket.unregisterCallBack("stockData");
     clearInterval(this.timeId);
   },
   methods: {
@@ -42,8 +52,8 @@ export default {
         this.startInterval();
       });
     },
-    async getData() {
-      const { data: ret } = await this.$http.get("stock");
+    getData(ret) {
+      // const { data: ret } = await this.$http.get("stock");
       this.allData = ret;
       this.updateChart();
       this.startInterval();
