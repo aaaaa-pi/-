@@ -72,7 +72,7 @@ export default class SocketService {
         } else {
             this.sendRetryCount++
             setTimeout(() => {
-                this.ws.send(JSON.stringify(data))
+                this.send(data)
             }, this.sendRetryCount * 500)
         }
     }

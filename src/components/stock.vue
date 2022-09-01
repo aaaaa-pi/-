@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -36,7 +37,7 @@ export default {
   },
   methods: {
     initChart() {
-      this.chartInstance = this.$echarts.init(this.$refs.stock_ref, "chalk");
+      this.chartInstance = this.$echarts.init(this.$refs.stock_ref, this.theme);
       const initOption = {
         title: {
           text: "▎库存与销量分析",
@@ -80,7 +81,6 @@ export default {
       const seriesArr = showData.map((item, index) => {
         return {
           type: "pie",
-          radius: [100, 80],
           center: centerArr[index],
           hoverAnimation: false,
           labelLine: {
@@ -92,7 +92,7 @@ export default {
           },
           data: [
             {
-              name: item.name + "\n" + item.sales,
+              name: item.name + "\n\n" + item.sales,
               value: item.sales,
               itemStyle: {
                 color: new this.$echarts.graphic.LinearGradient(0, 1, 0, 0, [
@@ -123,7 +123,7 @@ export default {
     },
     screenAdapter() {
       const titleFontSize = (this.$refs.stock_ref.offsetWidth / 100) * 3.6;
-      const innerRadius = titleFontSize * 2;
+      const innerRadius = titleFontSize * 3;
       const outterRadius = innerRadius * 1.125;
       const adapterOption = {
         title: {
@@ -183,6 +183,17 @@ export default {
         }
         this.updateChart();
       }, 5000);
+    },
+  },
+  computed: {
+    ...mapState(["theme"]),
+  },
+  watch: {
+    theme() {
+      this.chartInstance.dispose();
+      this.initChart();
+      this.screenAdapter();
+      this.updateChart();
     },
   },
 };

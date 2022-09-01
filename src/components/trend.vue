@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import { getThemeValue } from "@/utils/theme_utils";
 export default {
   data() {
     return {
@@ -54,6 +56,7 @@ export default {
     this.$socket.unregisterCallBack("trendData");
   },
   computed: {
+    ...mapState(["theme"]),
     selectTypes() {
       if (!this.allData) {
         return [];
@@ -73,6 +76,7 @@ export default {
     comStyle() {
       return {
         fontSize: this.titleFontSize + "px",
+        color: getThemeValue(this.theme).titleColor,
       };
     },
     marginStyle() {
@@ -81,9 +85,17 @@ export default {
       };
     },
   },
+  watch: {
+    theme() {
+      this.chartInstance.dispose();
+      this.initChart();
+      this.screenAdapter();
+      this.updateChart();
+    },
+  },
   methods: {
     initChart() {
-      this.chartInstance = this.$echarts.init(this.$refs.trend_ref, "chalk");
+      this.chartInstance = this.$echarts.init(this.$refs.trend_ref, this.theme);
       const initOption = {
         grid: {
           left: "3%",

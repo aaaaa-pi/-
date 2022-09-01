@@ -1,13 +1,19 @@
 <template>
   <div class="com-contain">
     <div class="com-chart" ref="hot_ref"></div>
-    <span class="iconfont arr-left" @click="toLeft">&#xe6ef;</span>
-    <span class="iconfont arr-right" @click="toRight">&#xe6ed;</span>
+    <span class="iconfont arr-left" @click="toLeft" :style="comStyle"
+      >&#xe6ef;</span
+    >
+    <span class="iconfont arr-right" @click="toRight" :style="comStyle"
+      >&#xe6ed;</span
+    >
     <span class="cat-name">{{ catName }}</span>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+import { getThemeValue } from "@/utils/theme_utils";
 export default {
   data() {
     return {
@@ -20,12 +26,27 @@ export default {
     this.$socket.registerCallBack("hotData", this.getData);
   },
   computed: {
+    ...mapState(["theme"]),
     catName() {
       if (!this.allData) {
         return "";
       } else {
         return this.allData[this.currentIndex].name;
       }
+    },
+    comStyle() {
+      return {
+        fontSize: this.titleFontSize + "px",
+        color: getThemeValue(this.theme).titleColor,
+      };
+    },
+  },
+  watch: {
+    theme() {
+      this.chartInstance.dispose();
+      this.initChart();
+      this.screenAdapter();
+      this.updateChart();
     },
   },
   mounted() {
@@ -46,7 +67,7 @@ export default {
   },
   methods: {
     initChart() {
-      this.chartInstance = this.$echarts.init(this.$refs.hot_ref, "chalk");
+      this.chartInstance = this.$echarts.init(this.$refs.hot_ref, this.theme);
       const initOption = {
         title: {
           text: "▎热销商品销售金额占比统计",
@@ -129,8 +150,8 @@ export default {
           },
         },
         legend: {
-          itemWidth: titleFontSize / 2,
-          itemHeight: titleFontSize / 2,
+          itemWidth: titleFontSize,
+          itemHeight: titleFontSize,
           itemGap: titleFontSize / 2,
           textStyle: {
             fontSize: titleFontSize / 2,

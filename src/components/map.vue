@@ -7,6 +7,7 @@
 <script>
 import axiox from "axios";
 import { getProvinceMapInfo } from "@/utils/map_utils";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -36,7 +37,7 @@ export default {
   },
   methods: {
     async initChart() {
-      this.chartInstance = this.$echarts.init(this.$refs.map_ref, "chalk");
+      this.chartInstance = this.$echarts.init(this.$refs.map_ref, this.theme);
       // 获取中国地图的矢量数据
       // 由于我们现在获取的地图矢量数据并不是位于KOA2的后台，所以不能使用this.$http
       const ret = await axiox.get(
@@ -136,6 +137,17 @@ export default {
         },
       };
       this.chartInstance.setOption(revertOption);
+    },
+  },
+  computed: {
+    ...mapState(["theme"]),
+  },
+  watch: {
+    theme() {
+      this.chartInstance.dispose();
+      this.initChart();
+      this.screenAdapter();
+      this.updateChart();
     },
   },
 };
